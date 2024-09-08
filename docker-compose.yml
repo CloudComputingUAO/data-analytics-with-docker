@@ -1,0 +1,91 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+    volumes:
+      - .:/app
+      - ./log:/app/log
+    command: ["python", "main.py"]
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_worker
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+    volumes:
+      - .:/app
+      - ./log:/app/log
+    command: ["celery", "-A", "celery_config", "worker", "--loglevel=info"]
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_beat
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+    volumes:
+      - .:/app
+      - ./log:/app/log
+    command: ["celery", "-A", "celery_config", "beat", "--loglevel=info"]
+
+  spark:
+    image: bitnami/spark:latest
+    container_name: spark
+    ports:
+      - "4040:4040"
+    environment:
+      SPARK_MODE: master
+    volumes:
+      - spark_data:/spark
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test
+    command: ["pytest", "--maxfail=1", "--disable-warnings", "-q"]
+    volumes:
+      - .:/app
+
+volumes:
+  postgres_data:
+  spark_data:

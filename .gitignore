@@ -1,0 +1,22 @@
+# Ignore log files and directories
+log/
+*.log
+
+# Ignore data files
+*.csv
+*.sqlite
+
+# Ignore the environment variables file
+.env
+
+# Ignore system configuration files
+.DS_Store
+*.swp
+
+# Ignore Python bytecode and cache files
+__pycache__/
+*.pyc
+
+# Ignore Docker volumes and configuration files
+docker-compose.override.yml
+docker-compose.local.yml

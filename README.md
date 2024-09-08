@@ -1,6 +1,36 @@
 # Data Analytics with Docker
 
-This project demonstrates how to perform data analytics with Docker using Python, PostgreSQL, Redis, Celery, and PySpark. The project processes CSV files, loads data into a PostgreSQL database, performs data analysis with PySpark, and generates periodic reports.
+This repository provides a comprehensive example of a data analytics pipeline using Docker. It demonstrates how to integrate various technologies including Python, PostgreSQL, Redis, Celery, and PySpark to build a robust data processing and analysis workflow. The project includes functionalities for:
+
+- **CSV File Processing**: Load and process CSV files into a PostgreSQL database.
+- **Data Analysis**: Perform data analysis using PySpark and generate periodic reports.
+- **Task Scheduling**: Utilize Celery for periodic and asynchronous task execution.
+- **Testing**: Includes unit tests with `pytest` to ensure code reliability.
+
+## Project Structure
+
+Here is a brief description of the files and directories in this repository:
+
+- **`app/`**: Contains the core application code.
+
+  - **`__init__.py`**: Initializes the `app` package and optionally defines the package version or imports key functions.
+  - **`main.py`**: The main entry point of the application that starts the data processing pipeline.
+  - **`tasks.py`**: Contains Celery tasks for loading CSV files and analyzing data.
+  - **`config.py`**: Configuration settings for database connections and other parameters.
+  - **`queries.py`**: SQL queries used in the project.
+  - **`Dockerfile`**: Defines how to build the Docker image for the application.
+  - **`requirements.txt`**: Lists Python dependencies required for the application.
+
+- **`docker-compose.yml`**: Docker Compose configuration file that defines the services (e.g., Redis, PostgreSQL, Celery, and test container) required for the application.
+
+- **`.env.example`**: Example environment variable file. Copy this to `.env` and configure your own environment variables.
+
+- **`.gitignore`**: Specifies files and directories to be ignored by Git.
+
+- **`README.md`**: Provides an overview of the project, setup instructions, and usage information.
+
+- **`test/`**: Contains unit tests for the project.
+  - **`test_tasks.py`**: Unit tests for the functions defined in `tasks.py`.
 
 ## Prerequisites
 
@@ -13,7 +43,7 @@ This project demonstrates how to perform data analytics with Docker using Python
 
    ```bash
    git clone <repository-url>
-   cd your_project
+   cd data-analytics-with-docker
    ```
 
 2. **Create a `.env` File:**
